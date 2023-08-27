@@ -10,7 +10,7 @@ import 'package:ammanauto/helpers/shared_value_helper.dart';
 import 'package:ammanauto/app_config.dart';
 import 'package:ammanauto/custom/input_decorations.dart';
 import 'package:ammanauto/repositories/profile_repository.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ammanauto/helpers/file_helper.dart';
@@ -39,8 +39,8 @@ class _ProfileEditState extends State<ProfileEdit> {
   bool _showConfirmPassword = false;
 
   //for image uploading
-  final ImagePicker _picker = ImagePicker();
-  late XFile _file;
+  // final ImagePicker _picker = ImagePicker();
+  // late XFile _file;
 
   chooseAndUploadImage(context) async {
     var status = await Permission.photos.request();
@@ -69,21 +69,21 @@ class _ProfileEditState extends State<ProfileEdit> {
 
     } else if (status.isGranted) {
       //file = await ImagePicker.pickImage(source: ImageSource.camera);
-      _file = (await _picker.pickImage(source: ImageSource.gallery))!;
+      // _file = (await _picker.pickImage(source: ImageSource.gallery))!;
 
-      if (_file == null) {
-        return;
-      }
+      // if (_file == null) {
+      //   return;
+      // }
 
       //return;
-      String base64Image = FileHelper.getBase64FormateFile(_file.path);
-      String fileName = _file.path.split("/").last;
+      // String base64Image = FileHelper.getBase64FormateFile(_file.path);
+      // String fileName = _file.path.split("/").last;
 
-      var profileImageUpdateResponse =
-          await ProfileRepository().getProfileImageUpdateResponse(
-        base64Image,
-        fileName,
-      );
+      // var profileImageUpdateResponse =
+      //     await ProfileRepository().getProfileImageUpdateResponse(
+      //   base64Image,
+      //   fileName,
+      // );
 
       // if (profileImageUpdateResponse.result == false) {
       //   ToastComponent.showDialog(profileImageUpdateResponse.message,

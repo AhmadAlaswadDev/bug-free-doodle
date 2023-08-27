@@ -6,7 +6,13 @@ target 'Runner' do
     use_frameworks!
   
     # Pods for Runner
-    
-# target 'RunnerTests' do
-  #   inherit! :search_paths
+  end
+  
+#   target 'RunnerTests' do
+#     inherit! :search_paths
+    # Pods for testing
+  end
+  
+  target 'RunnerUITests' do
+    # Pods for UI testing
   end

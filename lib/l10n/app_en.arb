@@ -1,0 +1,188 @@
+{ 
+  "main_screen_bottom_navigation_home":"Home",
+  "main_screen_bottom_navigation_offers":"Offers",
+  "main_screen_bottom_navigation_clubs":"Clubs",
+  "login_screen_sign_in":"Sign In",
+  "login_screen_forgot_password":"Forgot Password",
+  "login_screen_not_registered_yet":"Not registerd yet ?",
+  "login_screen_create_account":"Create account",
+  "home_screen_close_app":"Do you want close the app?",
+  "yes":"Yes",
+  "no":"No",
+  "confirm": "Confirm",
+  "deny": "Deny",
+  "photo_permission": "Photo Permission",
+  "app_needs_permission": "This app needs permission",
+  "settings": "Settings",
+  "give_photo_permission": "Go to your application settings and give photo permission",
+  "no_file_chosen": "No file is chosen",
+  "password_forget_screen_title":"Forgot Password",
+  "password_forget_screen_desc":"Enter your phone number below. we will send you an SMS with a pin code to confirm your identity",
+  "password_forgot_screen_send_sms":"Send SMS",
+  "otp_screen_desc":"Enter the pin code sent to your mobile phone",
+  "otp_screen_btn_send_code": "Send Code",
+  "otp_screen_verification_code_warning": "Enter verification code",
+  "otp_screen_verify_your": "Verify your",
+  "otp_screen_email_account": "Email Account",
+  "otp_screen_phone_number": "Phone Number",
+  "otp_screen_enter_verification_code_to_phone": "Enter the verification code that sent to your phone recently.",
+  "otp_screen_confirm": "Confirm",
+  "otp_screen_resend_code": "Resend Code",
+  "password_otp_screen_code_warning": "Enter the code",
+  "password_otp_screen_password_warning": "Enter password",
+  "password_otp_screen_password_confirm_warning": "Confirm your password",
+  "password_otp_screen_password_length_warning": "Password must contain at least 6 characters",
+  "password_otp_screen_password_length_recommendation": "Password must contain at least 6 characters",
+  "password_otp_screen_password_match_warning": "Passwords do not match",
+  "password_otp_screen_enter_the_code_sent": "Enter the code sent",
+  "password_otp_screen_enter_verification_code_to_email": "Enter the verification code that sent to your email recently.",
+  "password_otp_screen_enter_verification_code_to_phone": "Enter the verification code that sent to your phone recently.",
+  "password_otp_screen_password": "Password",
+  "password_otp_screen_congratulations": "Congratulations !!",
+  "password_otp_screen_password_change_msg": "You have successfully changed your password",
+  "password_otp_screen_password_changed": "Password Changed",
+  "password_otp_screen_back_to_Login": "Back to Login",
+  "password_otp_screen_retype_password": "Retype Password",
+  "password_otp_screen_confirm": "Confirm",
+  "password_otp_screen_resend_code": "Resend Code",
+  "profile_screen_please_log_in": "Please log in to see the profile",
+  "profile_screen_orders": "Orders",
+  "profile_screen_profile": "Profile",
+  "profile_screen_address": "Address",
+  "profile_screen_notification": "Notification",
+  "profile_screen_purchase_history": "Purchase History",
+  "profile_screen_earning_points": "Earning Points History",
+  "profile_screen_refund_requests": "Refund Requests",
+  "profile_screen_in_your_cart": "in your cart",
+  "profile_screen_in_wishlist": "your recommendations",
+  "profile_screen_in_ordered": "you ordered",
+  "profile_screen_language": "Language",
+  "profile_screen_currency": "Currency",
+  "profile_screen_coupons": "Coupons",
+  "profile_screen_favorite_seller": "Favorite Seller",
+  "profile_screen_all_digital_products": "All Digital Products",
+  "profile_screen_on_auction_products": "On Auction Products",
+  "profile_screen_wholesale_products": "Wholesale Products",
+  "profile_screen_browse_all_sellers": "Browse All Sellers",
+  "profile_screen_blogs": "Blogs",
+  "profile_screen_check_balance": "Check Balance",
+  "profile_screen_account": "Account",
+  "profile_edit_screen_name_warning": "Enter your name",
+  "profile_edit_screen_email_warning": "Enter email",
+  "profile_edit_screen_phone_warning": "Enter phone number",
+  "profile_edit_screen_password_warning": "Enter password",
+  "profile_edit_screen_password_changes": "Password Changes",
+  "profile_edit_screen_password_confirm_warning": "Confirm your password",
+  "profile_edit_screen_password_length_warning": "Password must contain atleast 6 characters",
+  "profile_edit_screen_password_match_warning": "Passwords do not match",
+  "profile_edit_screen_password_length_recommendation": "*Password must contain at least 6 characters*",
+  "profile_edit_screen_login_warning": "Please log in to see the profile",
+  "profile_edit_screen_basic_information": "Basic Information",
+  "profile_edit_screen_name": "Name",
+  "profile_edit_screen_phone": "Phone",
+  "profile_edit_screen_password": "New Password",
+  "profile_edit_screen_retype_password": "Retype Password",
+  "profile_edit_screen_btn_update_profile": "Update Profile",
+  "profile_edit_screen_btn_update_password": "Update Password",
+  "profile_edit_screen_edit_profile": "Edit Profile",
+  "change_language_change_language": "Change Language",
+  "change_language_no_language_is_added": "No language is Added",
+  "login_screen_email": "Email",
+  "registration_screen_name_warning": "Enter your name",
+  "registration_screen_email_warning": "Enter email",
+  "registration_screen_phone_warning": "Enter phone number",
+  "registration_screen_password_warning": "Enter password",
+  "registration_screen_password_confirm_warning": "Confirm your password",
+  "registration_screen_password_length_warning": "Password must contain atleast 6 characters",
+  "registration_screen_password_length_recommendation": "Password must contain at least 6 characters",
+  "registration_screen_password_match_warning": "Passwords do not match",
+  "registration_screen_join": "Join",
+  "registration_screen_name": "Name",
+  "registration_screen_email": "Email",
+  "registration_screen_phone": "Phone",
+  "registration_screen_password": "Password",
+  "registration_screen_retype_password": "Retype Password",
+  "registration_screen_or_register_with_phone": "or, Register with a phone number",
+  "registration_screen_or_register_with_email": "or, Register with an email",
+  "registration_screen_register_sign_up": "Sign Up",
+  "registration_screen_already_have_account": "Already have an Account ?",
+  "registration_screen_log_in": "Log in",
+  "i_agree":"I Agree",
+  "terms_conditions":"Terms Conditions",
+  "privecy_policies":"Privecy Policies",
+  "main_drawer_not_logged_in": "Not Logged In",
+  "main_drawer_change_language": "Change Language",
+  "main_drawer_home": "Home",
+  "main_drawer_profile": "Profile",
+  "main_drawer_orders": "Orders",
+  "main_drawer_my_wishlist": "My Recommendations",
+  "main_drawer_messages": "Messages",
+  "main_drawer_wallet": "Wallet",
+  "main_drawer_login": "Login",
+  "main_drawer_logout": "Logout",
+  "home_screen_no_carousel_image_found": "No carousel image found",
+
+
+
+
+
+
+
+
+
+
+
+
+
+  "subscribe_with":"Subscribe With",
+  "off":"OFF",
+  "hi_guest":"Hi, Guest",
+  "hi":"مرحبا",
+  "entities_we_happy_to_serve_with":" Entities we happy to serve with",
+  "various_services_secure_you_way":"Various Services secure you way",
+  "subscreption_steps":"Subscreption Steps",
+  "common_qusetions":"Common Qusetions",
+  "services":"Services",
+  "offers_for_you":"Offers For you",
+  "offers":"Offers",
+  "phone":"Phone Number",
+
+
+  "inbox":"Inbox",
+  "documents":"Documents",
+  "app":"App",
+  "security":"security",
+  "notifications":"notifications",
+  "help_center":"Help Center",
+  "info":"Info",
+  "first_dropdown":"first item",
+  "second_dropdown":"second item",
+
+
+  "times":"Times",
+  "duration":"Duration",
+  "sar":"SAR",
+  "ex_date":"Ex Date",
+  "unlimited_times":"Unlimited Times"
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

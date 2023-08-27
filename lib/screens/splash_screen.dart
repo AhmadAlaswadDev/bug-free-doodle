@@ -8,7 +8,7 @@ import 'package:ammanauto/my_theme.dart';
 import 'package:ammanauto/providers/locale_provider.dart';
 import 'package:ammanauto/screens/main.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
+// import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,17 +19,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  PackageInfo _packageInfo = PackageInfo(
-    appName: AppConfig.app_name,
-    packageName: 'Unknown',
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-  );
+  // PackageInfo _packageInfo = PackageInfo(
+  //   appName: AppConfig.app_name,
+  //   packageName: 'Unknown',
+  //   version: 'Unknown',
+  //   buildNumber: 'Unknown',
+  // );
 
   Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
+    // final PackageInfo info = await PackageInfo.fromPlatform();
     setState(() {
-      _packageInfo = info;
+      // _packageInfo = info;
     });
   }
 

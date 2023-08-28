@@ -13,7 +13,7 @@ target 'Runner' do
 #     # Pods for testing
 #   end
   
-  target 'RunnerUITests' do
-    # Pods for UI testing
-  end
+#   target 'RunnerUITests' do
+#     # Pods for UI testing
+#   end
   

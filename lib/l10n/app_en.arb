@@ -163,12 +163,18 @@
   "duration":"Duration",
   "sar":"SAR",
   "ex_date":"Ex Date",
-  "unlimited_times":"Unlimited Times"
+  "unlimited_times":"Unlimited Times",
  
 
 
-
-
+  "name_is_required":"Name is required",
+  "phone_number_is_required":"Phone number is required",
+  "password_is_required":"Password is required",
+  "phone_number_is_not_valid":"Phone number is not valid",
+  "new_password_is_required":"New Password is required",
+  "new_password_repeat_is_required":"New Password Repeat is required",
+  "password_must_be_at_least_have_8_letters":"Password must be at least have 8 characters long",
+  "passwords_not_matches":"Passwords not matches"
 
 
 

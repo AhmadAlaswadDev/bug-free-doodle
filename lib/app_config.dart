@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 var this_year = DateTime.now().year.toString();
 
 class AppConfig {
-  static String copyright_text = "@ Al Ruayah Al Thakiah Eng " + this_year; //this shows in the splash screen
-  static String app_name = "Al Ruayah Al Thakiah"; //this shows in the splash screen
+  static String copyright_text = "@ Amman Auto " + this_year; //this shows in the splash screen
+  static String app_name = "Amman Auto"; //this shows in the splash screen
   static String purchase_code = "1231321564654sadawd"; //enter your purchase code for the app from codecanyon
 
   //Default language config
@@ -19,11 +19,11 @@ class AppConfig {
 
   // static const DOMAIN_PATH = "192.168.6.1/folder"; //localhost
   //192.168.56.1
-  static const DOMAIN_PATH = "svg.ae"; // directly inside the public folder
-  // static const DOMAIN_PATH =  "svg.ae";
+  static const DOMAIN_PATH = "192.168.43.103:8000"; // directly inside the public folder
+  // static const DOMAIN_PATH =  "svg.ae"; http://192.168.43.103:8000/
  // 192.168.43.103
   //do not configure these below
-  static const String API_ENDPATH = "api/v2";
+  static const String API_ENDPATH = "api/v1";
   static const String PROTOCOL = HTTPS ? "https://" : "http://";
   static const String RAW_BASE_URL = "${PROTOCOL}${DOMAIN_PATH}";
   static const String BASE_URL = "${RAW_BASE_URL}/${API_ENDPATH}";

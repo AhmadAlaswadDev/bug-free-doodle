@@ -10,24 +10,24 @@ String signupResponseToJson(SignupResponse data) => json.encode(data.toJson());
 
 class SignupResponse {
   SignupResponse({
-    required this.result,
+    required this.status,
     required this.message,
-    required this.user_id,
+    required this.data,
   });
 
-  bool result;
+  bool status;
   String message;
-  int user_id;
+  Map<String,dynamic> data;
 
   factory SignupResponse.fromJson(Map<String, dynamic> json) => SignupResponse(
-    result: json["result"],
+    status: json["status"],
     message: json["message"],
-    user_id: json["user_id"],
+    data: json["data"],
   );
 
   Map<String, dynamic> toJson() => {
-    "result": result,
+    "status": status,
     "message": message,
-    "user_id": user_id,
+    "data": data,
   };
 }

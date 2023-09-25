@@ -1,6 +1,6 @@
 import 'package:ammanauto/custom/common_functions.dart';
-import 'package:ammanauto/dummy_data/dummy_clubs.dart';
 import 'package:ammanauto/my_theme.dart';
+import 'package:ammanauto/repositories/club_repository.dart';
 import 'package:ammanauto/screens/club_details.dart';
 import 'package:ammanauto/ui_elements/amman_club_card.dart';
 import 'package:ammanauto/ui_sections/drawer.dart';
@@ -53,12 +53,8 @@ class _ClubsState extends State<Clubs> with TickerProviderStateMixin {
   }
 
   fetchClubsLayout() async {
-    if (app_language.$ == 'en') {
-      _clubsList.addAll(dummy_clubs_list_en);
-    }
-    else{
-      _clubsList.addAll(dummy_clubs_list_ar);
-    }
+    var response = await ClubRepository().getClubs();
+    _clubsList.addAll(response.clubs);
 
     _isClubslInitial = false;
 
@@ -131,26 +127,55 @@ class _ClubsState extends State<Clubs> with TickerProviderStateMixin {
   }
 
   Widget buildClubsList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _clubsList.map((e) {
-        return InkWell(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return ClubDetails(club_id: e.club_id);
-            }));
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: AmmanClubCard(
-              club: e,
-            ),
+    if (_isClubslInitial && _clubsList.length == 0) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 18.0, right: 18, top: 10, bottom: 10),
+            child: ShimmerHelper().buildBasicShimmer(height: 196),
           ),
-        );
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 18.0, right: 18, top: 10, bottom: 10),
+            child: ShimmerHelper().buildBasicShimmer(height: 196),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 18.0, right: 18, top: 10, bottom: 10),
+            child: ShimmerHelper().buildBasicShimmer(height: 196),
+          )
+        ],
+      );
+    } else if (_clubsList.length > 0) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _clubsList.map((e) {
+          return InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ClubDetails(club_id: e.id);
+              }));
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: AmmanClubCard(
+                club: e,
+              ),
+            ),
+          );
 
-        ;
-      }).toList(),
-    );
+          ;
+        }).toList(),
+      );
+    } else {
+      return Container(
+        height: 100,
+        child: Text('no clubs found'),
+      );
+    }
   }
 
   Color _colorFromHex(String hexColor) {

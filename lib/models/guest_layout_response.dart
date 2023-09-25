@@ -1,21 +1,27 @@
 import 'dart:convert';
 
+import 'package:ammanauto/dummy_data/dummey_services.dart';
+
 
 
 GuestLayoutResponse guestLayoutResponseFromJson(String str) => GuestLayoutResponse.fromJson(json.decode(str));
 
 class GuestLayoutResponse {
   GuestLayoutResponse({
-    required this.slider,
+    // required this.slider,
     required this.entities,
+    required this.services,
+    required this.common_questions,
     // this.services,
     // this.subscreption_steps,
     // this.questions,
     required this.success,
   });
 
-  List<Slider> slider;
+  // List<Slider> slider;
   List<Entity> entities;
+    List<Service> services;
+    List<CommonQuestions> common_questions;
   // List<Product> services;
   // List<Product> recommended_products;
   // List<Slider> subscreption_steps;
@@ -23,14 +29,10 @@ class GuestLayoutResponse {
   bool success;
 
   factory GuestLayoutResponse.fromJson(Map<String, dynamic> json) => GuestLayoutResponse(
-    slider: List<Slider>.from(json["data"]["slider"]['data'].map((x) => Slider.fromJson(x))),
     entities: List<Entity>.from(json["data"]["entities"].map((x) => Entity.fromJson(x))),
-    // newest_products: List<Product>.from(json["data"]["newest_products"].map((x) => Product.fromJson(x))),
-    // recommended_products: List<Product>.from(json["data"]["recommended_products"].map((x) => Product.fromJson(x))),
-    // home_banner_2: List<Slider>.from(json["data"]["home_banner_2"]['data'].map((x) => Slider.fromJson(x))),
-    // home_banner_3: List<Slider>.from(json["data"]["home_banner_3"]['data'].map((x) => Slider.fromJson(x))),
-    // home_youtube_link: json['data']['home_youtube_link'],
-    success: json["success"],
+    services: List<Service>.from(json['data']['services'].map((x)=>Service.fromJson(x))),
+    common_questions: List<CommonQuestions>.from(json['data']['common_questions'].map((x)=>CommonQuestions.fromJson(x))),
+    success: json["status"],
   );
 
   // Map<String, dynamic> toJson() => {
@@ -61,19 +63,67 @@ class Slider {
 class Entity {
   Entity({
     required this.id,
-    required this.photo,
+    required this.img,
   });
 
   int id;
-  String photo;
+  String img;
 
   factory Entity.fromJson(Map<String, dynamic> json) => Entity(
     id: json["id"],
-    photo: json['photo']
+    img: json['img']
   );
 
   Map<String, dynamic> toJson() => {
-    "photo": photo,
+    "id":id,
+    "img": img,
+  };
+}
+
+
+class Service {
+  int id;
+  String name;
+  String img;
+
+  Service({required this.id, required this.name,required this.img});
+
+    factory Service.fromJson(Map<String, dynamic> json) => Service(
+    id: json["id"],
+    img: json['img'], 
+    name: json['name']
+  );
+
+    Map<String, dynamic> toJson() => {
+    "id":id,
+    "img": img,
+    "name": name
+  };
+}
+
+
+
+class CommonQuestions {
+  CommonQuestions({
+    required this.id,
+    required this.question,
+    required this.answer
+  });
+
+  int id;
+  String question;
+  String answer;
+
+  factory CommonQuestions.fromJson(Map<String, dynamic> json) => CommonQuestions(
+    id: json["id"],
+    question: json['question'],
+    answer: json['answer']
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id":id,
+    "question": question,
+    "answer": answer,
   };
 }
 

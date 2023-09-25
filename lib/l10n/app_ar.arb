@@ -154,7 +154,19 @@
   "duration":"المدة",
   "sar":"ريال",
   "ex_date":"تاريخ الانتهاء",
-  "unlimited_times":"غير محدود"
+  "unlimited_times":"غير محدود",
+
+
+
   
+  "name_is_required":"الاسم اجباري",
+  "phone_number_is_required":"رقم الموبايل اجباري",
+  "password_is_required":"كلمة السر اجبارية",
+  "phone_number_is_not_valid":"رقم الموبايل غير صالح",
+  "new_password_is_required":"كلمة السر الجديدة اجبارية",
+  "new_password_repeat_is_required":"تكرار كلمة السر الجديدة اجبارية",
+  "password_must_be_at_least_have_8_letters":"كلمة السر يجب ان تحوي 8 محارف كحد ادنى",
+  "passwords_not_matches":"كلمة السر غير مطابقة"
+
 
 }

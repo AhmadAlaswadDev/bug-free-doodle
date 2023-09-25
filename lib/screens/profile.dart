@@ -223,32 +223,26 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            body: RefreshIndicator(
-              color: MyTheme.accent_color,
-              backgroundColor: Colors.red,
-              onRefresh: _onPageRefresh,
-              displacement: 10,
-              child: CustomScrollView(
-                controller: _mainScrollController,
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18.0, vertical: 10),
-                        child: buildSettingsSection(accountSettingsData),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18.0, vertical: 10),
-                        child: buildSettingsSection(appSettingsData),
-                      ),
-                    ]),
-                  )
-                ],
-              ),
+            body: CustomScrollView(
+              controller: _mainScrollController,
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 10),
+                      child: buildSettingsSection(accountSettingsData),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 10),
+                      child: buildSettingsSection(appSettingsData),
+                    ),
+                  ]),
+                )
+              ],
             ),
           ),
         ],
@@ -263,6 +257,7 @@ class _ProfileState extends State<Profile> {
       height: 48,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 8),
@@ -286,11 +281,20 @@ class _ProfileState extends State<Profile> {
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
           ),
+          InkWell(
+            child: Image.asset(
+              'assets/profile.png',
+              width: 30,
+            ),
+            onTap: () {
+              onTapLogout(context);
+            },
+          )
         ],
       ),
     );
@@ -338,7 +342,7 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: tab['items'].map<Widget>((item) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 0),
                         child: TextButton(
                             onPressed: () {
                               if (item['redirect_to'] == 'change_language') {

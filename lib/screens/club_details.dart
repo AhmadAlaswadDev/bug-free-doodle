@@ -1,8 +1,9 @@
-
 import 'package:ammanauto/dummy_data/dummy_club_details.dart';
 import 'package:ammanauto/dummy_data/dummy_clubs.dart';
 
 import 'package:ammanauto/my_theme.dart';
+import 'package:ammanauto/repositories/club_repository.dart';
+import 'package:ammanauto/screens/pay.dart';
 import 'package:ammanauto/ui_elements/amman_club_card.dart';
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:ammanauto/custom/box_decorations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ClubDetails extends StatefulWidget {
-  late int club_id;
+  late String club_id;
   late bool show_back_button;
   late bool go_back;
 
@@ -32,14 +33,10 @@ class _ClubDetailsState extends State<ClubDetails>
   int _current_slider = 0;
   ScrollController _mainScrollController = ScrollController();
 
-  late ClubDetailsItem _club_details = ClubDetailsItem(
-      club: Club(club_id: 0, name: '', color: '', times: 0, duration: 0, price: 0),
-      description: '',
-      services: []);
-
-  final _servicesList = [];
-
   bool _isClubDetailsInitial = true;
+  var _club = null;
+  var _club_details = null;
+  final _servicesList = [];
 
   @override
   void initState() {
@@ -55,10 +52,13 @@ class _ClubDetailsState extends State<ClubDetails>
   }
 
   fetchOfferDetails() async {
+    var response = await ClubRepository().getClubDetails(id: widget.club_id);
+    if (response.success) {
+      _club = response.club;
+      _club_details = response.club_details;
+      _servicesList.addAll(response.club_details.services);
+    }
 
-    _club_details = dummy_club_details
-        .firstWhere((element) => element.club.club_id == widget.club_id);
-    _servicesList.addAll(_club_details.services);
     _isClubDetailsInitial = false;
     setState(() {});
   }
@@ -87,128 +87,148 @@ class _ClubDetailsState extends State<ClubDetails>
         child: Scaffold(
             key: _scaffoldKey,
             //drawer: MainDrawer(),
-            body: Stack(
-              children: [
-                RefreshIndicator(
-                  color: MyTheme.accent_color,
-                  backgroundColor: Colors.white,
-                  onRefresh: _onRefresh,
-                  displacement: 0,
-                  child: CustomScrollView(
-                    controller: _mainScrollController,
-                    physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
-                    slivers: <Widget>[
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20),
-                            child: AmmanClubCard(
-                              club: _club_details.club,
-                            ),
-                          )
-                        ]),
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 1),
-                                    child: Text(
-                                      _club_details.club.name,
-                                      style: TextStyle(
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+            body: !_isClubDetailsInitial
+                ? Stack(
+                    children: [
+                      RefreshIndicator(
+                        color: MyTheme.accent_color,
+                        backgroundColor: Colors.white,
+                        onRefresh: _onRefresh,
+                        displacement: 0,
+                        child: CustomScrollView(
+                          controller: _mainScrollController,
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          slivers: <Widget>[
+                            SliverList(
+                              delegate: SliverChildListDelegate([
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  child: AmmanClubCard(
+                                    club: _club,
                                   ),
+                                )
+                              ]),
+                            ),
+                            SliverList(
+                              delegate: SliverChildListDelegate(
+                                [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 16),
-                                    child: Text(
-                                      _club_details.description,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                        vertical: 12),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 1),
+                                          child: Text(
+                                            _club_details.name,
+                                            style: TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 16),
+                                          child: Text(
+                                            _club_details.description,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        buildServicesGrid()
+                                      ],
                                     ),
                                   ),
-                                  buildServicesGrid()
                                 ],
                               ),
+                            ),
+                            SliverList(
+                              delegate: SliverChildListDelegate([
+                                Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 16),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      decoration:
+                                          BoxDecorations.buildBoxDecoration2(),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '${AppLocalizations.of(context)!.privecy_policies} & ${AppLocalizations.of(context)!.terms_conditions}',
+                                            style: TextStyle(
+                                                color: MyTheme.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              print('hi');
+                                            },
+                                            child: Image.asset(
+                                              'assets/down.png',
+                                              height: 24,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 16, right: 16, bottom: 12),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return Pay();
+                                        }));
+                                      },
+                                      child: IntrinsicWidth(
+                                        child: Container(
+                                            constraints: BoxConstraints(
+                                              maxWidth: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.7,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 10),
+                                            decoration: BoxDecoration(
+                                                color: Colors.black87,
+                                                borderRadius:
+                                                    BorderRadius.circular(6)),
+                                            child: Text(
+                                              _club_details.subscribe_text,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: MyTheme.white,
+                                                  fontSize: 23,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                      )),
+                                ),
+                              ]),
                             ),
                           ],
                         ),
                       ),
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 16),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                decoration:
-                                    BoxDecorations.buildBoxDecoration2(),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '${ AppLocalizations.of(context)!.privecy_policies } & ${ AppLocalizations.of(context)!.terms_conditions }',
-                                      style: TextStyle(
-                                          color: MyTheme.red, fontSize: 16,fontWeight: FontWeight.bold),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        print('hi');
-                                      },
-                                      child: Image.asset(
-                                        'assets/down.png',
-                                        height: 24,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 16, right: 16, bottom: 12),
-                              child: IntrinsicWidth(
-                                child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth:
-                                          MediaQuery.of(context).size.width *
-                                              0.7,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.black87,
-                                        borderRadius: BorderRadius.circular(6)),
-                                    child: Text(
-                                      '${ AppLocalizations.of(context)!.subscribe_with } 53%  ${ AppLocalizations.of(context)!.off }',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: MyTheme.white, fontSize: 23,fontWeight: FontWeight.bold),
-                                    )),
-                              )),
-                        ]),
+                      const Align(
+                        alignment: Alignment.center,
+                        // child: buildProductLoadingContainer()
                       ),
                     ],
-                  ),
-                ),
-                const Align(
-                  alignment: Alignment.center,
-                  // child: buildProductLoadingContainer()
-                ),
-              ],
-            )),
+                  )
+                : null),
       ),
     );
   }
@@ -243,7 +263,7 @@ class _ClubDetailsState extends State<ClubDetails>
                     children: [
                       Container(
                           alignment: Alignment.center, // use aligment
-                          child: Image.asset(e.photo,
+                          child: Image.asset(e.img,
                               height: 40, fit: BoxFit.cover)),
                       Text(
                         e.name,

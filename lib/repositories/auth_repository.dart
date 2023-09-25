@@ -1,4 +1,9 @@
 import 'package:ammanauto/app_config.dart';
+import 'package:ammanauto/models/password_verify_response.dart';
+import 'package:ammanauto/models/validation/forgot_password_request_response.dart';
+import 'package:ammanauto/models/validation/login_validation_response.dart';
+import 'package:ammanauto/models/validation/password_change_response.dart';
+import 'package:ammanauto/models/validation/signup_validation_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:ammanauto/models/login_response.dart';
 import 'package:ammanauto/models/logout_response.dart';
@@ -13,44 +18,171 @@ import 'dart:convert';
 import 'package:ammanauto/helpers/shared_value_helper.dart';
 
 class AuthRepository {
-  Future<LoginResponse> getLoginResponse(
-      @required String email, @required String password) async {
+  Future<dynamic> getLoginResponse(
+      @required String phone, @required String password) async {
     var post_body = jsonEncode({
-      "email": "${email}",
+      "phone": "${phone}",
       "password": "$password",
-      "identity_matrix": AppConfig.purchase_code
     });
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/login");
     final response = await http.post(url,
         headers: {
-          "Accept": "*/*",
+          'Accept': 'application/json',
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
 
-    return loginResponseFromJson(response.body);
+    debugPrint(response.body);
+
+    if (response.statusCode == 201) {
+      return loginResponseFromJson(response.body);
+    } else if (response.statusCode == 422) {
+      return loginValidationResponseFromJson(response.body);
+    } else {
+      return false;
+    }
   }
 
-  Future<LoginResponse> getSocialLoginResponse(@required String social_provider,
-      @required String name, @required String email, @required String provider,
-      {access_token = ""}) async {
-    email = email == ("null") ? "" : email;
+  Future<dynamic> getSignupResponse(
+    @required String name,
+    @required String phone,
+    @required String password,
+  ) async {
+    var post_body = jsonEncode({
+      "name": "$name",
+      "phone": "${phone}",
+      "password": "$password",
+    });
 
-    var post_body = jsonEncode(
-        {"name": "${name}", "email": email, "provider": "$provider","social_provider":"$social_provider","access_token":"$access_token"});
-
-    Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/social-login");
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/register");
     final response = await http.post(url,
         headers: {
+          'Accept': 'application/json',
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
-    print(post_body);
-    print(response.body.toString());
-    return loginResponseFromJson(response.body);
+    print(response.body);
+    if (response.statusCode == 201) {
+      return true;
+      // return signupResponseFromJson(response.body);
+    } else if (response.statusCode == 422) {
+      return signupValidationResponseFromJson(response.body);
+      // debugPrint('register response=>>>>>>>>>>> ${response.body} ');
+    }
+  }
+
+  Future<dynamic> getSignupVerifyResponse(
+    String name,
+    String phone,
+    String otp,
+  ) async {
+    var post_body = jsonEncode({
+      "name": "$name",
+      "phone": "${phone}",
+      "otp": "$otp",
+    });
+
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/register/verfiy");
+    final response = await http.post(url,
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          "Accept-Language": app_language.$,
+        },
+        body: post_body);
+    print(response.body);
+    if (response.statusCode == 201) {
+      return signupResponseFromJson(response.body);
+    } else {
+      false;
+    }
+  }
+
+  Future<dynamic> getPasswordForgetResponse(@required String phone) async {
+    var post_body = jsonEncode({"phone": "$phone"});
+
+    Uri url = Uri.parse(
+      "${AppConfig.BASE_URL}/auth/password/otp/request",
+    );
+
+    final response = await http.post(url,
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          "Accept-Language": app_language.$,
+        },
+        body: post_body);
+
+    if (response.statusCode == 201) {
+      return true;
+      // return passwordForgetResponseFromJson(response.body);
+    } else if (response.statusCode == 422) {
+      return forgotPasswordValidationResponseFromJson(response.body);
+    } else {
+      return false;
+    }
+  }
+
+  Future<dynamic> getPasswordForgetVerifyResponse(
+      @required String phone, @required String otp) async {
+    var post_body = jsonEncode({"phone": "$phone", "otp": "$otp"});
+
+    Uri url = Uri.parse(
+      "${AppConfig.BASE_URL}/auth/password/change/request",
+    );
+
+    final response = await http.post(url,
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          "Accept-Language": app_language.$,
+        },
+        body: post_body);
+    debugPrint(response.body.toString());
+    if (response.statusCode == 201) {
+      return passwordVerifyResponseFromJson(response.body);
+    } else {
+      return false;
+    }
+  }
+
+  Future<dynamic> getPasswordChangeResponse(
+    @required String phone,
+    @required String token,
+    @required String password,
+    @required String password_confirmation,
+  ) async {
+    var post_body = jsonEncode({
+      "phone": "$phone",
+      "token": "$token",
+      "password": "$password",
+      "password_confirmation": "$password_confirmation"
+    });
+
+    Uri url = Uri.parse(
+      "${AppConfig.BASE_URL}/auth/password/change",
+    );
+
+    final response = await http.post(url,
+        headers: {
+          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          "Accept-Language": app_language.$,
+        },
+        body: post_body);
+    debugPrint(response.body.toString());
+    if (response.statusCode == 201) {
+      return true;
+    }
+    else if(response.statusCode == 422){
+      return passwordChangeValidationResponseFromJson(response.body);
+    }
+    else {
+      return false;
+    }
   }
 
   Future<LogoutResponse> getLogoutResponse() async {
@@ -59,7 +191,7 @@ class AuthRepository {
       url,
       headers: {
         "Authorization": "Bearer ${access_token.$}",
-        "App-Language": app_language.$,
+        "Accept-Language": app_language.$,
       },
     );
 
@@ -68,29 +200,29 @@ class AuthRepository {
     return logoutResponseFromJson(response.body);
   }
 
-  Future<SignupResponse> getSignupResponse(
-      @required String name,
-      @required String email_or_phone,
-      @required String password,
-      @required String passowrd_confirmation,
-      @required String register_by) async {
+  Future<LoginResponse> getSocialLoginResponse(@required String social_provider,
+      @required String name, @required String email, @required String provider,
+      {access_token = ""}) async {
+    email = email == ("null") ? "" : email;
+
     var post_body = jsonEncode({
-      "name": "$name",
-      "email_or_phone": "${email_or_phone}",
-      "password": "$password",
-      "password_confirmation": "${passowrd_confirmation}",
-      "register_by": "$register_by"
+      "name": "${name}",
+      "email": email,
+      "provider": "$provider",
+      "social_provider": "$social_provider",
+      "access_token": "$access_token"
     });
 
-    Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/signup");
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/social-login");
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
-
-    return signupResponseFromJson(response.body);
+    print(post_body);
+    print(response.body.toString());
+    return loginResponseFromJson(response.body);
   }
 
   Future<ResendCodeResponse> getResendCodeResponse(
@@ -102,7 +234,7 @@ class AuthRepository {
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
 
@@ -118,35 +250,11 @@ class AuthRepository {
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
 
     return confirmCodeResponseFromJson(response.body);
-  }
-
-  Future<PasswordForgetResponse> getPasswordForgetResponse(
-      @required String email_or_phone, @required String send_code_by) async {
-    var post_body = jsonEncode(
-        {"email_or_phone": "$email_or_phone", "send_code_by": "$send_code_by"});
-
-    Uri url = Uri.parse(
-      "${AppConfig.BASE_URL}/auth/password/forget_request",
-    );
-
-    print(url.toString());
-    print(post_body.toString());
-
-    final response = await http.post(url,
-        headers: {
-          "Content-Type": "application/json",
-          "App-Language": app_language.$,
-        },
-        body: post_body);
-
-    //print(response.body.toString());
-
-    return passwordForgetResponseFromJson(response.body);
   }
 
   Future<PasswordConfirmResponse> getPasswordConfirmResponse(
@@ -160,13 +268,12 @@ class AuthRepository {
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
 
     return passwordConfirmResponseFromJson(response.body);
   }
-
 
   Future<ResendCodeResponse> getPasswordResendCodeResponse(
       @required String email_or_code, @required String verify_by) async {
@@ -177,13 +284,12 @@ class AuthRepository {
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
 
     return resendCodeResponseFromJson(response.body);
   }
-
 
   Future<UserByTokenResponse> getUserByTokenResponse() async {
     var post_body = jsonEncode({"access_token": "${access_token.$}"});
@@ -191,12 +297,10 @@ class AuthRepository {
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "App-Language": app_language.$,
+          "Accept-Language": app_language.$,
         },
         body: post_body);
 
     return userByTokenResponseFromJson(response.body);
   }
-
-
 }

@@ -138,7 +138,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       Row(
                                         children: [
                                           Text(
-                                            '${AppLocalizations.of(context)!.hi}, Blaxk',
+                                            '${AppLocalizations.of(context)!.hi}, ${user_name.$}',
                                             style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w700),
@@ -183,7 +183,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     const EdgeInsets.symmetric(vertical: 12),
                                 child: AmmanCard(
                                     data: AmmanCardItem(
-                                        amanauto_ms: '456789784',
+                                        amanauto_ms: user_name.$,
                                         vin: 'W323FEG42311',
                                         ex_date: '12 / 4 / 2024',
                                         color: '#1fadc6')),

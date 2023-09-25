@@ -4,8 +4,9 @@ import 'package:flutter/scheduler.dart';
 
 class PinCodeTextField extends StatefulWidget {
   final int length;
+  late dynamic callback;
 
-  PinCodeTextField({required this.length});
+  PinCodeTextField({required this.length,required this.callback});
 
   @override
   _PinCodeTextFieldState createState() => _PinCodeTextFieldState();
@@ -31,6 +32,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField> {
             FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
           } else if (index == widget.length - 1 && controller.text.isNotEmpty) {
             // perform a final action for instance Focus the next widget.
+            widget.callback(_controllers);
           }
         });
       });

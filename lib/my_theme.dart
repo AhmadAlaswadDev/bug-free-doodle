@@ -23,6 +23,7 @@ class MyTheme{
   static Color golden = Color.fromRGBO(255, 168, 0, 1);
   static Color amber = Color.fromRGBO(254, 234, 209, 1);
   static Color golden_shadow = Color.fromRGBO(255, 168, 0, .4);
+  static Color green = Color.fromRGBO(0, 204, 176, 1);
   static Color red=Color.fromRGBO(239, 82, 97, 1);
   static Color box_gray=Color.fromARGB(255, 225, 225, 225);
   static Color shimmer_base = Colors.grey.shade50;

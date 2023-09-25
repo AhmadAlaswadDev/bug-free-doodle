@@ -35,6 +35,17 @@ final SharedValue<String> user_phone = SharedValue(
   value: "", // initial value
   key: "user_phone", // disk storage key for shared_preferences
 );
+
+final SharedValue<String> user_ams = SharedValue(
+  value: "", // initial value
+  key: "user_ams", // disk storage key for shared_preferences
+);
+
+final SharedValue<String> forgort_password_request_token = SharedValue(
+  value: "", // initial value
+  key: "forgort_password_request_token", // disk storage key for shared_preferences
+);
+
 final SharedValue<String> app_language = SharedValue(
   value: AppConfig.default_language, // initial value
   key: "app_language", // disk storage key for shared_preferences

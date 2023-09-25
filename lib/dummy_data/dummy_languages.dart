@@ -27,7 +27,7 @@ class Language {
       id: 1,
       name: 'العربية',
       image: '',
-      code: 'sa',
+      code: 'ar',
       mobile_app_code: 'ar',
       rtl: true,
       is_default: false,

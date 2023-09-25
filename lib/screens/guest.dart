@@ -1,6 +1,7 @@
 import 'package:ammanauto/custom/common_functions.dart';
 import 'package:ammanauto/dummy_data/dummy_subscription_steps.dart';
 import 'package:ammanauto/my_theme.dart';
+import 'package:ammanauto/repositories/layout_repository.dart';
 import 'package:ammanauto/screens/login.dart';
 import 'package:ammanauto/ui_sections/drawer.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +37,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
   final _entitiesList = [];
   final _servicesList = [];
   final _subsription_steps_List = [];
+  final _common_questions = [];
 
   final ScrollController _mainScrollController = ScrollController();
   bool _isCarouselInitial = true;
@@ -61,20 +63,22 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
   }
 
   fetchGuestLayout() async {
+    var response = await layoutRepository().getHomeGuestLayout();
+    _isGusetLayoutInitial = true;
+    _servicesList.addAll(response.services);
+    _entitiesList.addAll(response.services);
+    _common_questions.addAll(response.common_questions);
     _carouselImageList
         .add('http://192.168.43.103/ammanauto/guest_slider/1.png');
     _isCarouselInitial = false;
 
-    _entitiesList.addAll(dummy_entities_list);
     if (app_language.$ == 'en') {
-      _servicesList.addAll(dummy_services_list_en);
-    _subsription_steps_List.addAll(dummy_subsription_steps_list_en);
+      _subsription_steps_List.addAll(dummy_subsription_steps_list_en);
     } else {
-      _servicesList.addAll(dummy_services_list_ar);
-       _subsription_steps_List.addAll(dummy_subsription_steps_list_ar);
+      _subsription_steps_List.addAll(dummy_subsription_steps_list_ar);
     }
+    debugPrint(_servicesList.length.toString());
     _isGusetLayoutInitial = false;
-
     setState(() {});
   }
 
@@ -83,7 +87,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
     _entitiesList.clear();
     _servicesList.clear();
     _subsription_steps_List.clear();
-    _isGusetLayoutInitial = false;
+    _isGusetLayoutInitial = true;
     setState(() {});
   }
 
@@ -299,7 +303,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
   }
 
   Widget buildHomeCarouselSlider(context) {
-    if (_isCarouselInitial && _carouselImageList.length == 0) {
+    if (_isGusetLayoutInitial && _carouselImageList.length == 0) {
       return Padding(
           padding:
               const EdgeInsets.only(left: 18, right: 18, top: 0, bottom: 20),
@@ -351,7 +355,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
           );
         }).toList(),
       );
-    } else if (!_isCarouselInitial && _carouselImageList.length == 0) {
+    } else if (!_isGusetLayoutInitial && _carouselImageList.length == 0) {
       return Container(
           height: 100,
           child: Center(
@@ -390,7 +394,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
             decoration: BoxDecorations.buildBoxDecoration(),
             child: Container(
                 alignment: Alignment.center, // use aligment
-                child: Image.asset(e.photo, height: 28, fit: BoxFit.cover)),
+                child: Image.asset(e.img, height: 28, fit: BoxFit.cover)),
           );
         }).toList(),
       );
@@ -398,11 +402,13 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
       // should not be happening
       return Container(
         height: 100,
+        child: Text('no entities found'),
       );
     }
   }
 
   Widget buildServicesGrid() {
+    // return Text(' ${_isGusetLayoutInitial.toString()} ${_servicesList.length}  ');
     if (_isGusetLayoutInitial && _servicesList.length == 0) {
       return Padding(
           padding:
@@ -432,7 +438,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
                     children: [
                       Container(
                           alignment: Alignment.center, // use aligment
-                          child: Image.asset(e.photo,
+                          child: Image.asset(e.img,
                               height: 40, fit: BoxFit.cover)),
                       Text(
                         e.name,
@@ -447,6 +453,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
       // should not be happening
       return Container(
         height: 100,
+        child: Text('no services found'),
       );
     }
   }
@@ -463,8 +470,7 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
                 Container(
                     alignment: Alignment.center, // use aligment
                     padding: EdgeInsets.only(bottom: 10),
-                    child:
-                        Image.asset(e.photo, height: 50, fit: BoxFit.cover)),
+                    child: Image.asset(e.photo, height: 50, fit: BoxFit.cover)),
                 Text(
                   e.name,
                   style: TextStyle(fontSize: 16, color: MyTheme.accent_color),
@@ -476,6 +482,56 @@ class _GuestState extends State<Guest> with TickerProviderStateMixin {
   }
 
   buildCommonQuestions() {
+    if (_isGusetLayoutInitial && _common_questions.length == 0) {
+      return Padding(
+          padding:
+              const EdgeInsets.only(left: 18, right: 18, top: 0, bottom: 20),
+          child: ShimmerHelper().buildBasicShimmer(height: 120));
+    } else if (_common_questions.isNotEmpty) {
+      return Padding(
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 10),
+          child: Column(
+            children: _common_questions.map((e) {
+              return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(color: MyTheme.accent_color)),
+                      clipBehavior: Clip.antiAlias,
+                      margin: EdgeInsets.zero,
+                      child: ExpansionTile(
+                        title: Text(
+                          e.question,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        iconColor: MyTheme.accent_color,
+                        // tilePadding: EdgeInsets,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        collapsedIconColor: MyTheme.accent_color,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 28, vertical: 12),
+                            alignment: AlignmentDirectional.topStart,
+                            child: Text(e.answer),
+                          ),
+                        ],
+                      )));
+            }).toList(),
+          ));
+    } else {
+      // should not be happening
+      return Container(
+        height: 100,
+        child: Text('no services found'),
+      );
+    }
+
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Card(

@@ -19,8 +19,8 @@ class AppConfig {
 
   // static const DOMAIN_PATH = "192.168.6.1/folder"; //localhost
   //192.168.56.1
-  static const DOMAIN_PATH = "192.168.43.103:8000"; // directly inside the public folder
-  // static const DOMAIN_PATH =  "svg.ae"; http://192.168.43.103:8000/
+  // static const DOMAIN_PATH = "192.168.43.103:8000"; // directly inside the public folder
+  static const DOMAIN_PATH =  "amanauto-stage.hyper-stage.com";//  http://192.168.43.103:8000/
  // 192.168.43.103
   //do not configure these below
   static const String API_ENDPATH = "api/v1";

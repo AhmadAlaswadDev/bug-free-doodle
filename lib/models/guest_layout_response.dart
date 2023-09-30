@@ -82,7 +82,7 @@ class Entity {
 
 
 class Service {
-  int id;
+  String id;
   String name;
   String img;
 

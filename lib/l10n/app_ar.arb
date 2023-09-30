@@ -19,7 +19,7 @@
   "password_forget_screen_title":"نسيت كلمة المرور",
   "password_forget_screen_desc":"ادخل رقم الموبايل . سنقوم بارسال رسالة تحوي رمز للتحقق من هويتك",
   "password_forgot_screen_send_sms":"ارسل sms",
-  "otp_screen_desc":"ادخل الرقم السري الذي ادخل لرقمك",
+  "otp_screen_desc":"ادخل الرقم السري الذي ارسل لرقمك",
   "otp_screen_btn_send_code": "ارسل الرمز",
   "otp_screen_verification_code_warning": "ادخل رمز التحقق",
   "otp_screen_verify_your": "تحقق منك",
@@ -166,7 +166,10 @@
   "new_password_is_required":"كلمة السر الجديدة اجبارية",
   "new_password_repeat_is_required":"تكرار كلمة السر الجديدة اجبارية",
   "password_must_be_at_least_have_8_letters":"كلمة السر يجب ان تحوي 8 محارف كحد ادنى",
-  "passwords_not_matches":"كلمة السر غير مطابقة"
+  "passwords_not_matches":"كلمة السر غير مطابقة",
+  "no_more_offers":"لا يوجد عروض اخرى",
+  "loading_more_offers":"يتم جلب المزيد من العروض",
+  "no_offers_for_you":"لا يوجد عروض خاصة بك"
 
 
 }

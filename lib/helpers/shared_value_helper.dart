@@ -16,6 +16,11 @@ final SharedValue<int> user_id = SharedValue(
   key: "user_id", // disk storage key for shared_preferences
 );
 
+final SharedValue<bool> has_subscription = SharedValue(
+  value: false, // initial value
+  key: "has_subscription", // disk storage key for shared_preferences
+);
+
 final SharedValue<String> avatar_original = SharedValue(
   value: "", // initial value
   key: "avatar_original", // disk storage key for shared_preferences

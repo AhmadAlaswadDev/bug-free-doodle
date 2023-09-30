@@ -7,6 +7,8 @@ class AuthHelper {
     if (loginResponse.status == true) {
       is_logged_in.$ = true;
       is_logged_in.save();
+      has_subscription.$=loginResponse.data['user']['has_subscription'];
+      has_subscription.save();
       access_token.$ = loginResponse.data['token'];
       access_token.save();
       user_id.$ = loginResponse.data['user']['id'];
@@ -23,6 +25,8 @@ class AuthHelper {
   clearUserData() {
       is_logged_in.$ = false;
       is_logged_in.save();
+      has_subscription.$=false;
+      has_subscription.save();
       access_token.$ = "";
       access_token.save();
       user_id.$ = 0;

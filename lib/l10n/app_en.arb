@@ -174,7 +174,10 @@
   "new_password_is_required":"New Password is required",
   "new_password_repeat_is_required":"New Password Repeat is required",
   "password_must_be_at_least_have_8_letters":"Password must be at least have 8 characters long",
-  "passwords_not_matches":"Passwords not matches"
+  "passwords_not_matches":"Passwords not matches",
+  "no_more_offers":"No more offers",
+  "loading_more_offers":"Loading more offers",
+  "no_offers_for_you":"No Offers For You"
 
 
 

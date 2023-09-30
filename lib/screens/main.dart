@@ -47,12 +47,12 @@ class _MainState extends State<Main> {
 
   void onTapped(int i) {
     fetchAll();
-
-    if(i == 1){
-
+    debugPrint(' ${is_logged_in.$} ${access_token.$} ');
+    if(i == 1 && !is_logged_in.$ ){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+      return;
     }
     if(i == 2){
-      
     }
     if(i == 3){
       
@@ -80,8 +80,8 @@ class _MainState extends State<Main> {
 
   void initState() {
     _children = [
-      is_logged_in.$ ? Home() : Guest() ,
-      Offers(),
+      is_logged_in.$ && has_subscription.$ ? Home() : Guest() ,
+      is_logged_in.$ ? Offers() : Login(),
       Clubs()
     ];
     fetchAll();

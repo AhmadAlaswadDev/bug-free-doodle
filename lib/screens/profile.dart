@@ -85,20 +85,20 @@ class _ProfileState extends State<Profile> {
     final Map<String, dynamic> accountSettingsData = {
       'title': AppLocalizations.of(context)!.profile_screen_account,
       'tabs': [
-        {
-          'title': AppLocalizations.of(context)!.inbox,
-          'image': 'assets/inbox.png',
-          'items': [
-            {
-              "name": AppLocalizations.of(context)!.first_dropdown,
-              'redirect_to': 'nowhere'
-            },
-            {
-              "name": AppLocalizations.of(context)!.second_dropdown,
-              'redirect_to': 'nowhere'
-            },
-          ]
-        },
+        // {
+        //   'title': AppLocalizations.of(context)!.inbox,
+        //   'image': 'assets/inbox.png',
+        //   'items': [
+        //     {
+        //       "name": AppLocalizations.of(context)!.first_dropdown,
+        //       'redirect_to': 'nowhere'
+        //     },
+        //     {
+        //       "name": AppLocalizations.of(context)!.second_dropdown,
+        //       'redirect_to': 'nowhere'
+        //     },
+        //   ]
+        // },
         {
           'title': AppLocalizations.of(context)!.documents,
           'image': 'assets/documents.png',
@@ -130,20 +130,20 @@ class _ProfileState extends State<Profile> {
             },
           ]
         },
-        {
-          'title': AppLocalizations.of(context)!.security,
-          'image': 'assets/security.png',
-          'items': [
-            {
-              "name": AppLocalizations.of(context)!.first_dropdown,
-              'redirect_to': 'nowhere'
-            },
-            {
-              "name": AppLocalizations.of(context)!.second_dropdown,
-              'redirect_to': 'nowhere'
-            },
-          ]
-        },
+        // {
+        //   'title': AppLocalizations.of(context)!.security,
+        //   'image': 'assets/security.png',
+        //   'items': [
+        //     {
+        //       "name": AppLocalizations.of(context)!.first_dropdown,
+        //       'redirect_to': 'nowhere'
+        //     },
+        //     {
+        //       "name": AppLocalizations.of(context)!.second_dropdown,
+        //       'redirect_to': 'nowhere'
+        //     },
+        //   ]
+        // },
         {
           'title': AppLocalizations.of(context)!.notifications,
           'image': 'assets/notifications.png',

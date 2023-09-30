@@ -1,6 +1,9 @@
 import 'package:ammanauto/custom/common_functions.dart';
 import 'package:ammanauto/dummy_data/dummy_offers.dart';
+import 'package:ammanauto/models/offers/offers_response.dart';
 import 'package:ammanauto/my_theme.dart';
+import 'package:ammanauto/repositories/offer_repository.dart';
+import 'package:ammanauto/screens/login.dart';
 import 'package:ammanauto/screens/offer_deails.dart';
 
 import 'package:flutter/material.dart';
@@ -31,38 +34,62 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
   final _carouselImageList = [];
   final _offersList = [];
   bool _isOffersLayoutInitial = true;
+  int _page = 1;
+  int _totalData = 0;
+  bool _showLoadingContainer = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // In initState()
+
+    // if(!is_logged_in.$ ){
+    //     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    //   }
+
     reset();
     fetchAll();
+
+    _mainScrollController.addListener(() {
+      if (_mainScrollController.position.pixels ==
+          _mainScrollController.position.maxScrollExtent) {
+        setState(() {
+          _page++;
+        });
+        _showLoadingContainer = true;
+        fetchAll();
+      }
+    });
   }
 
   fetchAll() {
     fetchOffersLayout();
+    fetchOfferCarousel();
+  }
+
+  fetchOfferCarousel() async {
+    _carouselImageList
+        .add('http://192.168.43.103/ammanauto/guest_slider/1.png');
   }
 
   fetchOffersLayout() async {
-    _carouselImageList
-        .add('http://192.168.43.103/ammanauto/guest_slider/1.png');
+    var response = OfferRepository().getAllOffers(page: _page).then((value) {
+      _offersList.addAll(value.offers);
+      _isOffersLayoutInitial = false;
+      // _totalData = value.offers.length;
+      _showLoadingContainer = false;
 
-    if (app_language.$ == 'en') {
-      _offersList.addAll(dummy_offers_list_en);
-    } else {
-      _offersList.addAll(dummy_offers_list_ar);
-    }
-
-    _isOffersLayoutInitial = false;
-    setState(() {});
+      setState(() {});
+    });
   }
 
   reset() {
     _carouselImageList.clear();
     _offersList.clear();
+    _page = 1;
     _isOffersLayoutInitial = true;
+    _showLoadingContainer = false;
     setState(() {});
   }
 
@@ -167,10 +194,9 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  const Align(
-                    alignment: Alignment.center,
-                    // child: buildProductLoadingContainer()
-                  ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: buildLoadingContainer())
                 ],
               )),
         ),
@@ -252,7 +278,16 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
       return Padding(
           padding:
               const EdgeInsets.only(left: 18, right: 18, top: 0, bottom: 20),
-          child: ShimmerHelper().buildBasicShimmer(height: 120));
+          child: Column(
+            children: [
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+            ],
+          ));
     } else if (_offersList.isNotEmpty) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -261,7 +296,7 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
           return InkWell(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return OfferDetails(offer_id: e.offer_id);
+                return OfferDetails(offer_id: e.id);
               }));
             },
             child: Container(
@@ -286,7 +321,7 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          Text(e.cmp_name)
+                          Text(e.company)
                         ],
                       ),
                       Column(
@@ -295,7 +330,7 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              '${e.dicount_amount} % ${AppLocalizations.of(context)!.off}',
+                              '${e.discount} % ${AppLocalizations.of(context)!.off}',
                               style: TextStyle(
                                   fontSize: 20,
                                   color: MyTheme.red,
@@ -325,8 +360,27 @@ class _OffersState extends State<Offers> with TickerProviderStateMixin {
       );
     } else {
       return Container(
-        height: 100,
-      );
+          height: 100,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              AppLocalizations.of(context)!.no_offers_for_you,
+              textAlign: TextAlign.center,
+            ),
+          ));
     }
+  }
+
+  Container buildLoadingContainer() {
+    return Container(
+      height: _showLoadingContainer ? 36 : 0,
+      width: double.infinity,
+      color: Colors.white,
+      child: Center(
+        child: Text(_totalData == _offersList.length
+            ? AppLocalizations.of(context)!.no_more_offers
+            : AppLocalizations.of(context)!.loading_more_offers),
+      ),
+    );
   }
 }

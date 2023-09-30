@@ -3,6 +3,7 @@ import 'package:ammanauto/dummy_data/dummy_clubs.dart';
 
 import 'package:ammanauto/my_theme.dart';
 import 'package:ammanauto/repositories/club_repository.dart';
+import 'package:ammanauto/screens/login.dart';
 import 'package:ammanauto/screens/pay.dart';
 import 'package:ammanauto/ui_elements/amman_club_card.dart';
 
@@ -187,11 +188,24 @@ class _ClubDetailsState extends State<ClubDetails>
                                       left: 16, right: 16, bottom: 12),
                                   child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return Pay();
-                                        }));
+                                        if (!is_logged_in.$) {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return Login();
+                                          }));
+
+                                        } else {
+                                          debugPrint(has_subscription.$.toString());
+                                          if (!has_subscription.$) {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return Pay(club_details: _club_details,);
+                                            }));
+                                          }
+
+                                        }
                                       },
                                       child: IntrinsicWidth(
                                         child: Container(

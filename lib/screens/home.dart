@@ -1,7 +1,9 @@
 import 'package:ammanauto/custom/common_functions.dart';
 import 'package:ammanauto/dummy_data/dummy_offers.dart';
 import 'package:ammanauto/dummy_data/dummy_offers_details.dart';
+import 'package:ammanauto/models/offers/offer_details_response.dart';
 import 'package:ammanauto/my_theme.dart';
+import 'package:ammanauto/repositories/offer_repository.dart';
 import 'package:ammanauto/screens/login.dart';
 import 'package:ammanauto/screens/offer_deails.dart';
 import 'package:ammanauto/screens/profile.dart';
@@ -37,7 +39,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ScrollController _mainScrollController = ScrollController();
 
   bool _isHomeLayoutInitial = true;
-  final _offerssList = [];
+  final _offersList = [];
+  bool _isOffersLayoutInitial = true;
 
   @override
   void initState() {
@@ -57,26 +60,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   fetchOffersLayout() async {
-    if (app_language.$ == 'en') {
-      for (var i = 0; i < dummy_offers_list_en.length; i++) {
-        if (i < 3) {
-          _offerssList.add(dummy_offers_list_en[i]);
-        }
+    var response = OfferRepository().getAllOffers(page: 1).then((value) {
+      if(value.offers.isNotEmpty){
+        _offersList.addAll(value.offers.take(3));
       }
-    } else {
-      for (var i = 0; i < dummy_offers_list_ar.length; i++) {
-        if (i < 3) {
-          _offerssList.add(dummy_offers_list_ar[i]);
-        }
-      }
-    }
+      _isOffersLayoutInitial = false;
 
-    _isHomeLayoutInitial = false;
-    setState(() {});
+      setState(() {});
+    });
   }
 
   reset() {
-    _offerssList.clear();
+    _offersList.clear();
     _isHomeLayoutInitial = true;
     setState(() {});
   }
@@ -341,136 +336,101 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ),
     );
   }
-
   Widget buildOffersForYouList() {
-    if (_isHomeLayoutInitial && _offerssList.isEmpty) {
+    if (_isOffersLayoutInitial && _offersList.isEmpty) {
       return Padding(
           padding:
               const EdgeInsets.only(left: 18, right: 18, top: 0, bottom: 20),
-          child: ShimmerHelper().buildBasicShimmer(height: 120));
-    } else if (_offerssList.isNotEmpty) {
+          child: Column(
+            children: [
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+              ShimmerHelper().buildBasicShimmer(height: 64),
+            ],
+          ));
+    } else if (_offersList.isNotEmpty) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
-            children: _offerssList.map((e) {
+            children: _offersList.map((e) {
           return InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return OfferDetails(offer_id: e.offer_id);
-                }));
-              },
-              child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  decoration: BoxDecorations.buildBoxDecoration2(),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 3),
-                              child: Text(
-                                e.name,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: MyTheme.accent_color,
-                                    fontWeight: FontWeight.bold),
-                              ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return OfferDetails(offer_id: e.id);
+              }));
+            },
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecorations.buildBoxDecoration2(),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 3),
+                            child: Text(
+                              e.name,
+                              style: TextStyle(
+                                  color: MyTheme.accent_color,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            Text(e.cmp_name)
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text(
-                                '${e.dicount_amount} % ${AppLocalizations.of(context)!.off}',
-                                style: TextStyle(
-                                    color: MyTheme.red,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                          ),
+                          Text(e.company)
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              '${e.discount} % ${AppLocalizations.of(context)!.off}',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: MyTheme.red,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            Row(
-                              children: [
-                                Text(e.end_date),
-                                Padding(
-                                    padding:
-                                        EdgeInsetsDirectional.only(start: 6),
-                                    child: InkWell(
-                                      child: Image.asset(
-                                        'assets/down.png',
-                                        height: 18,
-                                      ),
-                                    ))
-                              ],
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  )));
+                          ),
+                          Row(
+                            children: [
+                              Text(e.end_date),
+                              Padding(
+                                  padding: EdgeInsetsDirectional.only(start: 6),
+                                  child: InkWell(
+                                    child: Image.asset(
+                                      'assets/down.png',
+                                      height: 18,
+                                    ),
+                                  ))
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+          );
         }).toList()),
       );
     } else {
       return Container(
-        height: 100,
-      );
+          height: 100,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              AppLocalizations.of(context)!.no_offers_for_you,
+              textAlign: TextAlign.center,
+            ),
+          ));
     }
-
-    // return Container(
-    //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //           padding: const EdgeInsets.symmetric(vertical: 6),
-    //           decoration: BoxDecorations.buildBoxDecoration2(),
-    //           child: Padding(
-    //             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Padding(
-    //                       padding: const EdgeInsets.only(bottom: 3),
-    //                       child: Text(
-    //                         'Car wash',
-    //                         style: TextStyle(
-    //                             color: MyTheme.accent_color,
-    //                             fontWeight: FontWeight.bold),
-    //                       ),
-    //                     ),
-    //                     const Text('petirmin company')
-    //                   ],
-    //                 ),
-    //                 Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.end,
-    //                   children: [
-    //                     Padding(
-    //                       padding: const EdgeInsets.only(bottom: 8),
-    //                       child: Text(
-    //                         '50% OFF',
-    //                         style: TextStyle(
-    //                             color: MyTheme.red,
-    //                             fontWeight: FontWeight.bold),
-    //                       ),
-    //                     ),
-    //                     const Text('End : 20 / 12 / 2023')
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           ))
-    //     ],
-    //   ),
-    // );
   }
 }

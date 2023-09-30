@@ -9,6 +9,7 @@ class layoutRepository {
   Future<GuestLayoutResponse> getHomeGuestLayout() async {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/home");
+        debugPrint(url.toString());
     final response = await http.get(
       url,
       headers: {

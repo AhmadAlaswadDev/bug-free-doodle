@@ -1,7 +1,8 @@
-import 'package:ammanauto/custom/common_functions.dart';
-import 'package:ammanauto/dummy_data/dummy_offers_details.dart';
-import 'package:ammanauto/dummy_data/dummy_offers_details.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:ammanauto/my_theme.dart';
+import 'package:ammanauto/repositories/offer_repository.dart';
 import 'package:ammanauto/ui_elements/amman_card.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -11,9 +12,10 @@ import 'package:ammanauto/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ammanauto/custom/box_decorations.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OfferDetails extends StatefulWidget {
-  late int offer_id;
+  late String offer_id;
   late bool show_back_button;
   late bool go_back;
 
@@ -33,12 +35,16 @@ class _OfferDetailsState extends State<OfferDetails>
   int _current_slider = 0;
   ScrollController _mainScrollController = ScrollController();
 
-  late Details _offer_details = Details(
-      details_id: 0,
-      qr_code: '',
-      amman_card:
-          AmmanCardItem(amanauto_ms: '', vin: '', ex_date: '', color: ''),
-      details_body: '');
+  var _offer_details = null;
+  var _offer_amman_card = null;
+  var qrCodeInfo = null;
+  String rawQrCodeSvg = '';
+
+  // details_id: 0,
+  // qr_code: '',
+  // amman_card:
+  //     AmmanCardItem(amanauto_ms: '', vin: '', ex_date: '', color: ''),
+  // details_body: ''
 
   bool _isOfferDetailsInitial = true;
 
@@ -56,10 +62,13 @@ class _OfferDetailsState extends State<OfferDetails>
   }
 
   fetchOfferDetails() async {
-    _offer_details = dummy_offer_details
-        .firstWhere((element) => element.details_id == widget.offer_id);
-    _isOfferDetailsInitial = false;
-    setState(() {});
+    OfferRepository().getOfferDetails(id: widget.offer_id).then((value) async {
+      _offer_details = value.offer_details;
+      _offer_amman_card = value.amman_card;
+      rawQrCodeSvg =value.offer_details.qr_code;
+      _isOfferDetailsInitial = false;
+      setState(() {});
+    });
   }
 
   reset() {
@@ -85,219 +94,66 @@ class _OfferDetailsState extends State<OfferDetails>
         child: Scaffold(
             key: _scaffoldKey,
             //drawer: MainDrawer(),
-            body: Stack(
-              children: [
-                RefreshIndicator(
-                  color: MyTheme.accent_color,
-                  backgroundColor: Colors.white,
-                  onRefresh: _onRefresh,
-                  displacement: 0,
-                  child: CustomScrollView(
-                    controller: _mainScrollController,
-                    physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
-                    slivers: <Widget>[
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              18.0,
-                              20.0,
-                              18.0,
-                              0.0,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/qr.png',
-                                  height: 80,
+            body: _isOfferDetailsInitial
+                ? Container()
+                : Stack(
+                    children: [
+                      RefreshIndicator(
+                        color: MyTheme.accent_color,
+                        backgroundColor: Colors.white,
+                        onRefresh: _onRefresh,
+                        displacement: 0,
+                        child: CustomScrollView(
+                          controller: _mainScrollController,
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          slivers: <Widget>[
+                            SliverList(
+                              delegate: SliverChildListDelegate([
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    18.0,
+                                    20.0,
+                                    18.0,
+                                    0.0,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Text(rawQrCodeSvg),
+                                      SvgPicture.memory(base64Decode(rawQrCodeSvg),width: 80,),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 18),
+                                        child: Image.asset(
+                                          'assets/card_logo2.png',
+                                          height: 70,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 18),
-                                  child: Image.asset(
-                                    'assets/card_logo2.png',
-                                    height: 70,
-                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  child: AmmanCard(data: _offer_amman_card),
                                 ),
-                              ],
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 12),
+                                  child: Html(data: _offer_details.description),
+                                )
+                              ]),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            child: AmmanCard(data: _offer_details.amman_card),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 12),
-                                    child: Text(
-                                      'HighLights',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 6),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 12,
-                                              color: MyTheme.accent_color,
-                                            )),
-                                        Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Text(
-                                                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 6),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 12,
-                                              color: MyTheme.accent_color,
-                                            )),
-                                        Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Text(
-                                                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 6),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 12,
-                                              color: MyTheme.accent_color,
-                                            )),
-                                        Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Text(
-                                                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 12),
-                                    child: Text(
-                                      'HighLights',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 6),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 12,
-                                              color: MyTheme.accent_color,
-                                            )),
-                                        Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Text(
-                                                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 6),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 12,
-                                              color: MyTheme.accent_color,
-                                            )),
-                                        Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Text(
-                                                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-        
-                                ],
-                              ))
-                        ]),
+                          ],
+                        ),
+                      ),
+                      const Align(
+                        alignment: Alignment.center,
+                        // child: buildProductLoadingContainer()
                       ),
                     ],
-                  ),
-                ),
-                const Align(
-                  alignment: Alignment.center,
-                  // child: buildProductLoadingContainer()
-                ),
-              ],
-            )),
+                  )),
       ),
     );
   }

@@ -119,7 +119,7 @@ StreamController<ErrorAnimationType> errorController = StreamController<ErrorAni
                   children: [
                     Text(
                       AppLocalizations.of(context)!
-                          .password_forget_screen_title,
+                          .otp_screen_confirm,
                       textAlign: TextAlign.start,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
